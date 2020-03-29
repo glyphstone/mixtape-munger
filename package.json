@@ -1,0 +1,30 @@
+{
+  "name": "mixtape-munger",
+  "version": "1.0.0",
+  "description": "A command line program to update a mixtap data set presented as a json file and output in similar format.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js ",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glyphstone/mixtape-munger.git"
+  },
+  "keywords": [
+    "highspot",
+    "test",
+    "json",
+    "node.js"
+  ],
+  "author": "Breanna Anderson (glyphstone)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/glyphstone/mixtape-munger/issues"
+  },
+  "homepage": "https://github.com/glyphstone/mixtape-munger#readme",
+  "dependencies": {
+    "jest": "^25.2.3",
+    "yargs": "^15.3.1"
+  }
+}
