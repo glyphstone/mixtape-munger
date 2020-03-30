@@ -12,11 +12,12 @@ npm --version
 
 Project Setup
 1. Clone repo https://github.com/glyphstone/mixtape-munger.git to your local environment
-2. > cd mixtape-munger
-2. > npm install
-3. > npm run test
+2. ``` > cd mixtape-munger```
+2. ``` > npm install ```
+3. ``` > npm run test```
 
-4. > node index.js --help
+4. > ``` node index.js --help ```
+
 ```
 Usage: index.js -d [string] -c [string] -o [string] -v // Merge changes into
 data and output
