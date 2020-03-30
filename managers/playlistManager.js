@@ -16,7 +16,8 @@ class PlaylistManager extends BaseSimpleManager {
 
     async mergeUpdateData( workingData, changeData) {
         let songIds = workingData.song_ids || []
-        workingData.song_ids = this.mergeArraysUnique( songIds, changeData.song_ids )
+        let newSongIds = changeData.song_ids || []
+        workingData.song_ids = this.mergeArraysUnique( songIds, newSongIds )
         return workingData
     }
 

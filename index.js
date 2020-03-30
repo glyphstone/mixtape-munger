@@ -35,8 +35,6 @@ const context = { log }
    .help()
    .argv
 
-   // console.log(JSON.stringify(argv, null, 2))
-
    const merger = new SimpleChangeMerge(context)
    merger.run(argv.data, argv.change, argv.output, argv.verbose).then( (changeCount) => {
        log.info(`mixtape merge completed successfully. ${changeCount} items changed.`)

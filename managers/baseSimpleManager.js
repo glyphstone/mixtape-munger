@@ -89,6 +89,14 @@ class BaseSimpleManager {
 
     }
 
+    async exists( ids ) {
+        let hits = []
+        let allExists = true
+        hits = ids.map( id => { return this.data[id] != null})
+        allExists = hits.reduce( ( allExists, hit) => { return allExists && hit })
+        return { each: hits, all: allExists }
+    }
+
     /**
      * get total count of stored objects
      */

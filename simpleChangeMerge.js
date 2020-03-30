@@ -8,9 +8,12 @@ class SimpleChangeMerge {
         this.context = context
         this.log = this.context.log
         this.changeCount = 0
-        this.userManager = new UserManager(context)
-        this.songManager = new SongManager(context)
-        this.playlistManager = new PlaylistManager(context)
+        this.userManager = new UserManager(this.context)
+        this.songManager = new SongManager(this.context)
+        this.playlistManager = new PlaylistManager(this.context)
+        let managers = { user: this.userManager, song: this.songManager, playlist: this.playlistManager}
+        this.context.managers = managers
+
         this.verbose = false
 
     }
@@ -27,16 +30,14 @@ class SimpleChangeMerge {
     async loadData( dataFile ) {
         const rawdata = fs.readFileSync(dataFile);
         const data = JSON.parse(rawdata);
-        await this.loadUsers( data.users ) 
-        await this.loadSongs( data.songs)
-        await this.loadPlaylists( data.playlists)
+        await this.loadTypeData( data.users, this.userManager, "User")
+        await this.loadTypeData( data.songs, this.songManager, "Song")
+        await this.loadTypeData( data.playlists, this.playlistManager, "Playlist")
     }
     
     async doChanges( changeFile ) {
         const rawdata = fs.readFileSync(changeFile);
         const changeSpec = JSON.parse(rawdata);
-        // TODO: change to old style for loop so that awaits work properly
-
         changeSpec.changes.forEach( async change => { await this.doChange( change) })
     }
 
@@ -79,48 +80,28 @@ class SimpleChangeMerge {
         return 1
     }
 
-    async loadUsers( users ) {
-        users.forEach( async user => {
-            const added = await this.userManager.add( user) 
+    async loadTypeData( data, manager, typeName) {
+        data.forEach( async i => {
+            await manager.add( i )
         })
-        if( this.verbose) {
-            const userCount = await this.userManager.count()
-            this.log.info(`Users Loaded: ${userCount}`)
+        if( this.verbose ) {
+            const count = await manager.count()
+            this.log.info(`${typeName} data loaded count: ${count}`)
         }
-    }
 
-    async loadSongs( songs ) {
-        songs.forEach( async song => {
-            const added = await this.songManager.add( song) 
-        })
-        if( this.verbose) {
-            const songCount = await this.songManager.count()
-            this.log.info(`Songs Loaded: ${songCount}`)
-        }
-    }
-
-    async loadPlaylists( playlists ) {
-        playlists.forEach( async playlist => {
-            const added = await this.playlistManager.add( playlist) 
-        })
-
-        if( this.verbose) {
-            const playlistCount = await this.playlistManager.count()
-            this.log.info(`Playlists Loaded: ${playlistCount}`)
-        }
     }
 
     async outputChanges( outputFile ) {
         let outputData = {}
-        await this.outputData( outputData, "users", this.userManager )
-        await this.outputData( outputData, "songs", this.songManager)
-        await this.outputData( outputData, "playlists", this.playlistManager )
+        await this.outputTypeData( outputData, this.userManager, "users")
+        await this.outputTypeData( outputData, this.songManager, "songs")
+        await this.outputTypeData( outputData, this.playlistManager, "playlists" )
         const jsonOutput = JSON.stringify( outputData, null, 2)
         fs.writeFileSync(outputFile, jsonOutput);
 
     }
     
-    async outputData( data, listName, manager ) {
+    async outputTypeData( data,  manager, listName ) {
 
         let results
         let offset = 0
