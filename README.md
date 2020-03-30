@@ -3,12 +3,15 @@ A command line utility to modify a mixtape data set presented as a json file - a
 
 This utility is implemented as a Node.js project
 ## Prerequisites:
+Suggested minimum versions:
 
 node --version
 v8.9.4
 npm --version
 6.14.4
 
+### Platform
+This project was developed and tested under Ubuntu 18.04.4 using VSCode
 
 ## Project Setup and Quickstart
 1. Clone repo https://github.com/glyphstone/mixtape-munger.git to your local environment
