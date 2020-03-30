@@ -10,13 +10,13 @@ npm --version
 6.14.4
 
 
-## Project Setup and review
+## Project Setup and Quickstart
 1. Clone repo https://github.com/glyphstone/mixtape-munger.git to your local environment
 2. ``` > cd mixtape-munger```
-2. ``` > npm install ```
-3. ``` > npm run test```
+3. ``` > npm install ```
+4. ``` > npm run test```
 
-4. ``` > node index.js --help ```
+5. ``` > node index.js --help ```
 
 ```
 Usage: index.js -d [string] -c [string] -o [string] -v // Merge changes into
@@ -32,7 +32,8 @@ Options:
 
 ```
 
-5. ``` > npm run start ```
+6. ``` > npm run start ```
+
 Execute with default arguments. This will take the standard data file as provided (data/mixtape-data.json) and apply the 
 change file: data/mixtape-changes.json and output to data/mixtape-out.json
 
