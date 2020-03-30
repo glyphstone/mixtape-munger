@@ -19,10 +19,20 @@ class BaseSimpleManager {
     }
 
     async add( data, overwrite = false ) {
-        let id = data.id || null
+
+        // this.log.info(`Add item: ${JSON.stringify(data)}`)
+        let id = (data.id)? parseInt( data.id) : null
+    
         if( !id ) {
-            id = await this.nextId()
+            id = await this.getNextId()
+            data.id = id
+        } else {
+            if(this.nextId <= id) { 
+                this.nextId = id + 1
+            }
+    
         }
+
         if( this.data[id] && !overwrite ) {
             throw new Error(`${this.typeName} id ${id} already exists. Cannot add.`)
         }
@@ -31,14 +41,25 @@ class BaseSimpleManager {
     }
 
     async update( id, changeData ) {
-     
+
         let workingData = this.data[id]
         if( !workingData ) {
             throw new Error(`${this.typeName} object ${id} not found.`)
         }
-        
-        let updatedData = { ...workingData, ...changeData} // merge in changes
+
+        const updatedData = await this.mergeUpdateData( workingData, changeData)
+        this.data[id] = updatedData
+
         return updatedData
+    }
+
+    /**
+     * Overide this to modify update data integration
+     * @param {*} data 
+     * @param {*} changeData 
+     */
+    async mergeUpdateData( data, changeData) {
+        return { ...workingData, ...changeData }
     }
 
     async delete( id ) {
@@ -86,7 +107,7 @@ class BaseSimpleManager {
         return page
     }
 
-    async nextId() {
+    async getNextId() {
         const id = this.nextId
         this.nextId += 1
         return id

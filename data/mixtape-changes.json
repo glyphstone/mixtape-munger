@@ -1,0 +1,22 @@
+{
+    "version": "0.1",
+    "description": "Changes to demonstate basic set as per test requirements",
+    "changes": [
+        { 
+          "type": "playlist",
+          "action": "add",
+          "data": { "user_id": "7", "song_ids": ["1", "2", "3", "5", "8"] }
+        },
+        {
+          "type": "playlist",
+          "action": "delete",
+          "id": "2"
+        },
+        { 
+          "type": "playlist",
+          "action": "update",
+          "id": "1",
+          "data": { "song_ids": [ "32", "39", "40"]} 
+        }
+    ]
+}
