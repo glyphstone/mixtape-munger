@@ -5,7 +5,7 @@
         { 
           "type": "playlist",
           "action": "add",
-          "data": { "user_id": "7", "song_ids": ["1", "2", "3", "5", "8"] }
+          "data": { "user_id": "10", "song_ids": ["1", "2", "3", "5", "8"] }
         },
         {
           "type": "playlist",
@@ -16,7 +16,7 @@
           "type": "playlist",
           "action": "update",
           "id": "1",
-          "data": { "song_ids": [ "32", "39", "40"]},
+          "data": { "song_ids": [ "3"]},
           "mode": "add"
         }
     ]

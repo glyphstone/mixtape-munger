@@ -18,27 +18,47 @@ class SimpleChangeMerge {
 
     }
 
+    getManagers() {
+        return this.context.managers 
+    }
+
     async run( dataFile, changeFile, outputFile, verbose = false ) {
         this.verbose = verbose
         this.log.info(`run: ${dataFile} ${changeFile} ${outputFile} verbose: ${this.verbose}`)
-        await this.loadData( dataFile ) 
-        await this.doChanges( changeFile ) 
+        await this.readAndLoadData( dataFile ) 
+        await this.readAndDoChanges( changeFile ) 
         await this.outputChanges( outputFile)
         return this.changeCount
     }
 
-    async loadData( dataFile ) {
+    async readAndLoadData( dataFile ) {
         const rawdata = fs.readFileSync(dataFile);
-        const data = JSON.parse(rawdata);
+        const data = JSON.parse(rawdata)
+        await this.loadData(data)
+    }
+
+    async loadData( data ) {
         await this.loadTypeData( data.users, this.userManager, "User")
         await this.loadTypeData( data.songs, this.songManager, "Song")
         await this.loadTypeData( data.playlists, this.playlistManager, "Playlist")
     }
     
-    async doChanges( changeFile ) {
+    async readAndDoChanges( changeFile ) {
         const rawdata = fs.readFileSync(changeFile);
         const changeSpec = JSON.parse(rawdata);
-        changeSpec.changes.forEach( async change => { await this.doChange( change) })
+        await this.doChanges( changeSpec)
+
+    }
+
+    async doChanges( changeSpec ) {
+        const changes = changeSpec.changes
+        // old school for/each because array.forEach thwarts function of await....
+        for( let n = 0; n < changes.length; n++ ) {
+            const change = changes[n]
+            await this.doChange( change )
+
+        }
+
     }
 
     async doChange( change ) {
@@ -68,7 +88,8 @@ class SimpleChangeMerge {
                 changed = await this.playlistManager.add( change.data )
                 break 
             case "update":
-                changed = await this.playlistManager.update( change.id, change.data )
+                const mode = change.mode || "set"
+                changed = await this.playlistManager.update( change.id, change.data, mode )
                 break
             case "delete" :
                 await this.playlistManager.delete( change.id )
@@ -81,9 +102,12 @@ class SimpleChangeMerge {
     }
 
     async loadTypeData( data, manager, typeName) {
-        data.forEach( async i => {
-            await manager.add( i )
-        })
+        // do old skool for loop because Array.forEach short circuits await
+        for( let n = 0; n < data.length; n++ ) {
+            const item = data[n]
+            await manager.add(item)
+        }
+        
         if( this.verbose ) {
             const count = await manager.count()
             this.log.info(`${typeName} data loaded count: ${count}`)

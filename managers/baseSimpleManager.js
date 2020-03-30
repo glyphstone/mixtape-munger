@@ -8,6 +8,7 @@
  * 
  */
 
+
 class BaseSimpleManager {
     constructor( context ) {
         this.context = context
@@ -18,9 +19,13 @@ class BaseSimpleManager {
         this.typeName = "Undefined"
     }
 
+    getManager(name) {
+        const manager = this.context.managers[name]
+        return manager
+    }
+
     async add( data, overwrite = false ) {
 
-        // this.log.info(`Add item: ${JSON.stringify(data)}`)
         let id = (data.id)? parseInt( data.id) : null
     
         if( !id ) {
@@ -40,14 +45,14 @@ class BaseSimpleManager {
         return data
     }
 
-    async update( id, changeData ) {
+    async update( id, changeData, mode = "set" ) {
 
         let workingData = this.data[id]
         if( !workingData ) {
             throw new Error(`${this.typeName} object ${id} not found.`)
         }
 
-        const updatedData = await this.mergeUpdateData( workingData, changeData)
+        const updatedData = await this.mergeUpdateData( workingData, changeData, mode)
         this.data[id] = updatedData
 
         return updatedData
@@ -55,10 +60,10 @@ class BaseSimpleManager {
 
     /**
      * Overide this to modify update data integration
-     * @param {*} data 
+     * @param {*} workingData 
      * @param {*} changeData 
      */
-    async mergeUpdateData( data, changeData) {
+    async mergeUpdateData( workingData, changeData, mode) {
         return { ...workingData, ...changeData }
     }
 
@@ -82,6 +87,7 @@ class BaseSimpleManager {
     }
 
     async list( offset = 0, pagesize = 100 ) {
+
         if( offset == 0 ) {
             await this.initializeList()
         }
@@ -118,7 +124,7 @@ class BaseSimpleManager {
     async getNextId() {
         const id = this.nextId
         this.nextId += 1
-        return id
+        return id.toString()
     }
 }
 

@@ -16,7 +16,7 @@
           "type": "playlist",
           "action": "update",
           "id": "1",
-          "data": { "song_ids": [ "32", "39", "40"]},
+          "data": { "song_ids": [ "333"]},
           "mode": "add"
         }
     ]
